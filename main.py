@@ -13,23 +13,25 @@ sender_email = os.getenv("SENDER_EMAIL")
 receiver_email = os.getenv("RECEIVER_EMAIL")
 password = os.getenv("APP_PASSWORD")
 
-cpu_usage = psutil.cpu_percent(1)
+cpu_usage = int(psutil.cpu_percent(1))
 
-mem_usage = float(psutil.virtual_memory().percent)
+mem_usage = int(psutil.virtual_memory().percent)
 
-disk_usage = float(psutil.disk_usage("/").percent)
+disk_usage = int(psutil.disk_usage("/").percent)
 
 today_date = datetime.datetime.now()
 date_var = today_date.strftime("%d-%m-%Y")
 time_var = today_date.strftime("%H:%M:%S")
 
-with open("system-monitoring.txt",'w') as f:
-    f.write(f"System Analysis on: {date_var} at {time_var}\n\n")
-    f.write(f"CPU usage: {cpu_usage}%\n")
-    f.write(f"Memory usage: {mem_usage}%\n")
-    f.write(f"Disk usage: {disk_usage}%")
-
+# This block of code will be used to send email
 def send_email(sender_email,password,receiver_email):
+
+    with open("system-monitoring.txt",'w') as f:
+        f.write(f"System Analysis on: {date_var} at {time_var}\n\n")
+        f.write(f"CPU usage: {cpu_usage}%\n")
+        f.write(f"Memory usage: {mem_usage}%\n")
+        f.write(f"Disk usage: {disk_usage}%")
+
     subject = f"System Report generated on {date_var}"
     smtp_server = "smtp.gmail.com"
     smtp_port = 587
@@ -61,6 +63,80 @@ def send_email(sender_email,password,receiver_email):
         server.sendmail(sender_email,receiver_email,msg.as_string())
         print("Email sent successfully")
 
-send_email(sender_email,password,receiver_email)
-time.sleep(5)
-os.remove("system-monitoring.txt")
+# This block of code will send the email when memory usage is high triggered by check_resources()
+def memory_alert(sender_email,password,receiver_email):
+    msg = MIMEMultipart()
+    msg["Subject"] = f"Alert! Memory usage is high: {mem_usage}"
+    msg["From"] = sender_email
+    msg["To"] = receiver_email
+    body = """
+<html>
+<head>
+<body>
+<h1>Urgent Alert!</h1>
+<h3>Memory usage is high, Free the resource</h3>
+</body>
+</html>
+"""
+    msg.attach(MIMEText(body,"html"))
+    with smtplib.SMTP("smtp.gmail.com",587) as server:
+        server.starttls()
+        server.login(sender_email,password)
+        server.sendmail(sender_email,receiver_email,msg)
+
+# This block of code will send the email when cpu usage is high triggered by check_resources()
+def cpu_alert(sender_email,password,receiver_email):
+    msg = MIMEMultipart()
+    msg["Subject"] = f"Alert! CPU usage is high: {cpu_usage}"
+    msg["From"] = sender_email
+    msg["To"] = receiver_email
+    body = """
+<html>
+<head>
+<body>
+<h1>Urgent Alert!</h1>
+<h3>CPU usage is high, Check the running processes</h3>
+</body>
+</html>
+"""
+    msg.attach(MIMEText(body,"html"))
+    with smtplib.SMTP("smtp.gmail.com",587) as server:
+        server.starttls()
+        server.login(sender_email,password)
+        server.sendmail(sender_email,receiver_email,msg)
+
+# This block of code will send the email when disk usage is high triggered by check_resources()
+def disk_alert(sender_email,password,receiver_email):
+    msg = MIMEMultipart()
+    msg["Subject"] = f"Alert! Disk usage is high: {disk_usage}"
+    msg["From"] = sender_email
+    msg["To"] = receiver_email
+    body = """
+<html>
+<head>
+<body>
+<h1>Urgent Alert!</h1>
+<h3>Disk usage is high, Free some space...!!</h3>
+</body>
+</html>
+"""
+    msg.attach(MIMEText(body,"html"))
+    with smtplib.SMTP("smtp.gmail.com",587) as server:
+        server.starttls()
+        server.login(sender_email,password)
+        server.sendmail(sender_email,receiver_email,msg)
+
+# This block of code check resources
+def check_resources():
+    if cpu_usage > 75:
+        cpu_alert(sender_email,password,receiver_email)
+    if mem_usage > 75:
+        memory_alert(sender_email,password,receiver_email)
+    if disk_usage > 80:
+        disk_alert(sender_email,password,receiver_email)
+    if True:
+        send_email(sender_email,password,receiver_email)
+        time.sleep(5)
+        os.remove("system-monitoring.txt")
+
+check_resources()
