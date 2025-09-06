@@ -15,7 +15,8 @@ password = os.getenv("APP_PASSWORD")
 
 cpu_usage = int(psutil.cpu_percent(1))
 
-mem_usage = int(psutil.virtual_memory().percent)
+mem_usage = 78
+# mem_usage = int(psutil.virtual_memory().percent)
 
 disk_usage = int(psutil.disk_usage("/").percent)
 
