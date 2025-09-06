@@ -5,9 +5,9 @@ import os
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 
-load_dotenv()
+# load_dotenv()
 
 sender_email = os.getenv("SENDER_EMAIL")
 receiver_email = os.getenv("RECEIVER_EMAIL")
@@ -15,8 +15,7 @@ password = os.getenv("APP_PASSWORD")
 
 cpu_usage = int(psutil.cpu_percent(1))
 
-mem_usage = 78
-# mem_usage = int(psutil.virtual_memory().percent)
+mem_usage = int(psutil.virtual_memory().percent)
 
 disk_usage = int(psutil.disk_usage("/").percent)
 
@@ -83,7 +82,7 @@ def memory_alert(sender_email,password,receiver_email):
     with smtplib.SMTP("smtp.gmail.com",587) as server:
         server.starttls()
         server.login(sender_email,password)
-        server.sendmail(sender_email,receiver_email,msg)
+        server.sendmail(sender_email,receiver_email,msg.as_string())
         print("Email sent successfully on memory alert")
 
 # This block of code will send the email when cpu usage is high triggered by check_resources()
@@ -105,7 +104,7 @@ def cpu_alert(sender_email,password,receiver_email):
     with smtplib.SMTP("smtp.gmail.com",587) as server:
         server.starttls()
         server.login(sender_email,password)
-        server.sendmail(sender_email,receiver_email,msg)
+        server.sendmail(sender_email,receiver_email,msg.as_string())
         print("Email sent successfully on cpu alert")
 
 # This block of code will send the email when disk usage is high triggered by check_resources()
@@ -127,7 +126,7 @@ def disk_alert(sender_email,password,receiver_email):
     with smtplib.SMTP("smtp.gmail.com",587) as server:
         server.starttls()
         server.login(sender_email,password)
-        server.sendmail(sender_email,receiver_email,msg)
+        server.sendmail(sender_email,receiver_email,msg.as_string())
         print("Email sent successfully on disk alert")
 
 # This block of code check resources
