@@ -1,4 +1,4 @@
-name: send mail every 15 mins
+name: send mail every day at 11 PM
 on:
   workflow_dispatch:
 
