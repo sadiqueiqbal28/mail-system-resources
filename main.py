@@ -15,7 +15,8 @@ password = os.getenv("APP_PASSWORD")
 
 cpu_usage = int(psutil.cpu_percent(1))
 
-mem_usage = int(psutil.virtual_memory().percent)
+mem_usage = 78
+# mem_usage = int(psutil.virtual_memory().percent)
 
 disk_usage = int(psutil.disk_usage("/").percent)
 
@@ -83,6 +84,7 @@ def memory_alert(sender_email,password,receiver_email):
         server.starttls()
         server.login(sender_email,password)
         server.sendmail(sender_email,receiver_email,msg)
+        print("Email sent successfully on memory alert")
 
 # This block of code will send the email when cpu usage is high triggered by check_resources()
 def cpu_alert(sender_email,password,receiver_email):
@@ -104,6 +106,7 @@ def cpu_alert(sender_email,password,receiver_email):
         server.starttls()
         server.login(sender_email,password)
         server.sendmail(sender_email,receiver_email,msg)
+        print("Email sent successfully on cpu alert")
 
 # This block of code will send the email when disk usage is high triggered by check_resources()
 def disk_alert(sender_email,password,receiver_email):
@@ -125,18 +128,25 @@ def disk_alert(sender_email,password,receiver_email):
         server.starttls()
         server.login(sender_email,password)
         server.sendmail(sender_email,receiver_email,msg)
+        print("Email sent successfully on disk alert")
 
 # This block of code check resources
 def check_resources():
+
+    alert_sent = False
+
     if cpu_usage > 75:
         cpu_alert(sender_email,password,receiver_email)
+        alert_sent = True
     if mem_usage > 75:
         memory_alert(sender_email,password,receiver_email)
+        alert_sent = True
     if disk_usage > 80:
         disk_alert(sender_email,password,receiver_email)
-    if True:
+        alert_sent = True
+    if not alert_sent:
         send_email(sender_email,password,receiver_email)
-        time.sleep(5)
+        # time.sleep(5)
         os.remove("system-monitoring.txt")
 
 check_resources()
