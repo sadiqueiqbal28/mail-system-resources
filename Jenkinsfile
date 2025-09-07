@@ -34,7 +34,7 @@ pipeline {
 
         stage ('Install dependencies') {
             steps {
-                sh 'venv/bin/python -r requirements.txt'
+                sh 'venv/bin/pip install -r requirements.txt'
             }
         }
 
