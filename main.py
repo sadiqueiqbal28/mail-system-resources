@@ -5,8 +5,9 @@ import os
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-# from dotenv import load_dotenv
 
+# These 2 lines are for local environment with .env file
+# from dotenv import load_dotenv
 # load_dotenv()
 
 sender_email = os.getenv("SENDER_EMAIL")
