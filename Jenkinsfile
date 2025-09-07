@@ -13,7 +13,12 @@ pipeline {
         }
         stage ('Activate Virutal Environment') {
             steps {
-                sh 'source venv/bin/activate'
+                sh '. venv/bin/activate'
+            }
+        }
+        stage ('List down pip packages') {
+            steps {
+                sh 'pip list'
             }
         }
     }
