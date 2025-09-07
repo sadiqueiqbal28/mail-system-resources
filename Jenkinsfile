@@ -1,6 +1,11 @@
 pipeline {
     agent any
     stages {
+        stage ('Clean Workspace') {
+            steps {
+                cleanWs()
+            }
+        }
         stage ('Print Hello World') {
             steps {
                 sh 'echo "Hello World"'
@@ -19,6 +24,11 @@ pipeline {
         stage ('List down pip packages') {
             steps {
                 sh 'pip list'
+            }
+        }
+        stage ('Clean Workspace at last') {
+            step {
+                cleanWs()
             }
         }
     }
