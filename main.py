@@ -40,6 +40,7 @@ def send_email(sender_email,password,receiver_email):
 <html>
 <body>
 <h2>Alert System Analysis</h2>
+<h3>Script initiated by Jenkins pipeline</h3>
 <p>Check the attached documents</p>
 </body>
 </html>
