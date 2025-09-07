@@ -23,6 +23,7 @@ pipeline {
         stage ('Checkout repository') {
             steps {
                 checkout scm
+            }
         }
 
         stage ('Create Virtual Environment') {
