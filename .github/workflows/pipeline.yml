@@ -1,12 +1,10 @@
 name: send mail every day at 11 PM
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
 
 jobs:
   run-resource-monitor-script:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
 
     steps:
       - name: checkout repository
