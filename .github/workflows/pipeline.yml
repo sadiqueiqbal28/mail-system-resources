@@ -1,4 +1,4 @@
-name: send mail every day at 11 PM
+name: Run Workflow to send email
 on:
   workflow_dispatch:
 
